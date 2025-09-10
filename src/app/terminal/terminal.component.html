@@ -1,0 +1,38 @@
+<div class="linux-terminal">
+  <div class="terminal-header">
+    <div class="terminal-buttons">
+      <span class="terminal-button close"></span>
+      <span class="terminal-button minimize"></span>
+      <span class="terminal-button maximize"></span>
+    </div>
+    <div class="terminal-title">
+      {{ terminalService.currentUser }}@{{ terminalService.currentHostname }}: {{ terminalService.currentDirectoryPath
+      }}
+    </div>
+    <div class="terminal-header-spacer"></div>
+  </div>
+
+  <div #terminalContent class="terminal-content">
+    <div class="welcome-message">
+      Benvenuto nel Terminale Linux Simulato! 🐧<br>
+      Digita 'help' per vedere i comandi disponibili.
+    </div>
+
+    <div *ngFor="let line of commandHistory" class="terminal-line">
+      <span [innerHTML]="formatOutput(line)"></span>
+    </div>
+
+    <div class="input-line" *ngIf="showPrompt">
+      <span class="prompt">{{ getPrompt() }}</span>
+      <form (submit)="executeCommand($event)">
+        <input #terminalInput type="text" [(ngModel)]="currentInput" (keydown)="handleKeyDown($event)"
+          [ngModelOptions]="{standalone: true}" class="command-input" autocomplete="off" autocorrect="off"
+          autocapitalize="off" spellcheck="false" aria-label="Comando terminale" [disabled]="isLoading"
+          aria-describedby="terminal-instructions" />
+      </form>
+      <div class="loading-spinner" *ngIf="isLoading">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,211 @@
+// Variabili per i temi
+:root {
+  --bg-color: #f8f9fa;
+  --text-color: #333;
+  --header-bg: #6c5ce7;
+  --header-text: white;
+  --card-bg: white;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --border-color: #e9ecef;
+}
+
+.dark-theme {
+  --bg-color: #1a1a1a;
+  --text-color: #e9ecef;
+  --header-bg: #4834d4;
+  --header-text: white;
+  --card-bg: #2d3436;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --border-color: #636e72;
+}
+
+.app-container {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.app-header {
+  background: linear-gradient(135deg, var(--header-bg) 0%, #8e44ad 100%);
+  color: var(--header-text);
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 1.1rem;
+  }
+}
+
+.app-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.terminal-container {
+  margin-bottom: 3rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
+}
+
+.instructions {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
+
+  h2 {
+    margin-top: 0;
+    color: var(--header-bg);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+  }
+}
+
+.commands-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.command-group {
+  h3 {
+    color: var(--header-bg);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 0.3rem 0;
+      border-bottom: 1px solid var(--border-color);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      code {
+        background-color: rgba(108, 92, 231, 0.1);
+        color: var(--header-bg);
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+.examples {
+  h3 {
+    color: var(--header-bg);
+    margin-bottom: 1rem;
+  }
+}
+
+.example-commands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  code {
+    background-color: rgba(108, 92, 231, 0.2);
+    color: var(--header-bg);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(108, 92, 231, 0.3);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.app-footer {
+  text-align: center;
+  padding: 2rem;
+  margin-top: 3rem;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+
+  .theme-toggle {
+    color: var(--header-bg);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background-color: rgba(108, 92, 231, 0.1);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(108, 92, 231, 0.2);
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .app-header {
+    padding: 1.5rem;
+    
+    h1 {
+      font-size: 2rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .app-main {
+    padding: 1rem;
+  }
+
+  .commands-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .example-commands {
+    flex-direction: column;
+    
+    code {
+      text-align: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    h1 {
+      font-size: 1.75rem;
+    }
+  }
+
+  .instructions {
+    padding: 1rem;
+  }
+}

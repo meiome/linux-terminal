@@ -1,0 +1,61 @@
+// Aggiungi queste classi al file terminal.component.scss esistente
+
+.ansi-green {
+  color: #69f0ae;
+  font-weight: bold;
+}
+
+.ansi-gray {
+  color: #b3b3b3;
+  font-style: italic;
+}
+
+.ansi-red {
+  color: #ff5252;
+  font-weight: bold;
+}
+
+.loading-spinner {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #69f0ae;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.command-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+// Effetti di focus migliorati
+.command-input:focus {
+  outline: none;
+  background-color: rgba(105, 240, 174, 0.1);
+}
+
+// Supporto per mobile
+@media (max-width: 768px) {
+  .input-line {
+    flex-wrap: wrap;
+  }
+  
+  .loading-spinner {
+    margin-left: 0;
+    margin-top: 8px;
+    width: 100%;
+    justify-content: center;
+  }
+}
