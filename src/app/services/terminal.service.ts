@@ -32,9 +32,6 @@ export class TerminalService {
   private commandHistory: string[] = [];
   private historyIndex = -1;
 
-
-
-
   // Getter pubblico per accedere alla directory corrente
   get currentDirectoryPath(): string {
     return this.currentDirectory;
@@ -166,6 +163,11 @@ export class TerminalService {
   executeCommand(input: string): Observable<string> {
     const trimmedInput = input.trim();
     if (!trimmedInput) return of('');
+
+    // Gestione speciale per il comando clear
+    if (trimmedInput === 'clear') {
+      return this.clearCommand();
+    }
 
     // Salva nella cronologia comandi
     this.addToCommandHistory(trimmedInput);
@@ -326,7 +328,6 @@ export class TerminalService {
     this.historySubject.next([]);
   }
 
-
   // Navigazione nella cronologia comandi
   getCommandFromHistory(direction: 'up' | 'down'): string {
     if (this.commandHistory.length === 0) return '';
@@ -380,7 +381,7 @@ export class TerminalService {
   }
 
   private clearCommand(): Observable<string> {
-    this.history = [];
+    this.clearHistory();
     return of('');
   }
 

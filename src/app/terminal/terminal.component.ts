@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, HostListener, ChangeDetectorRef, OnDestroy, Input } from '@angular/core';
 import { TerminalService } from '../services/terminal.service';
 
 @Component({
@@ -6,19 +6,22 @@ import { TerminalService } from '../services/terminal.service';
   templateUrl: './terminal.component.html',
   styleUrls: ['./terminal.component.scss']
 })
-export class TerminalComponent implements AfterViewInit {
+export class TerminalComponent implements AfterViewInit, OnDestroy {
   @ViewChild('terminalInput') terminalInput!: ElementRef;
   @ViewChild('terminalContent') terminalContent!: ElementRef;
+  @Input() isDarkTheme = false;
 
   currentInput = '';
   commandHistory: string[] = [];
   showPrompt = true;
   isLoading = false;
   private historySubscription: any;
+  private themeSubscription: any;
 
   constructor(
     public terminalService: TerminalService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private elementRef: ElementRef
   ) { }
 
   ngAfterViewInit() {
@@ -31,11 +34,44 @@ export class TerminalComponent implements AfterViewInit {
       this.cdRef.detectChanges();
       this.scrollToBottom();
     });
+
+    // Applica il tema iniziale
+    this.applyThemeClass();
+    
+    // Ascolta il cambio tema
+    this.setupThemeListener();
+  }
+
+  ngOnChanges() {
+    // Reagisce ai cambiamenti dell'input isDarkTheme
+    this.applyThemeClass();
   }
 
   ngOnDestroy() {
     if (this.historySubscription) {
       this.historySubscription.unsubscribe();
+    }
+    if (this.themeSubscription) {
+      window.removeEventListener('theme-change', this.themeSubscription);
+    }
+  }
+
+  private setupThemeListener(): void {
+    this.themeSubscription = (event: CustomEvent) => {
+      this.isDarkTheme = event.detail.isDark;
+      this.applyThemeClass();
+      this.cdRef.detectChanges();
+    };
+
+    window.addEventListener('theme-change', this.themeSubscription as EventListener);
+  }
+
+  private applyThemeClass(): void {
+    const hostElement = this.elementRef.nativeElement;
+    if (this.isDarkTheme) {
+      hostElement.classList.add('dark-theme');
+    } else {
+      hostElement.classList.remove('dark-theme');
     }
   }
 
@@ -89,8 +125,9 @@ export class TerminalComponent implements AfterViewInit {
   }
 
   private navigateHistory(direction: 'up' | 'down') {
-    // TODO: Implementare navigazione cronologia comandi
-    console.log('Navigazione history:', direction);
+    const command = this.terminalService.getCommandFromHistory(direction);
+    this.currentInput = command;
+    this.cdRef.detectChanges();
   }
 
   private autoComplete() {
@@ -99,15 +136,13 @@ export class TerminalComponent implements AfterViewInit {
   }
 
   private clearTerminal() {
-    this.terminalService.executeCommand('clear').subscribe(() => {
-      this.commandHistory = this.terminalService.getHistory();
-    });
+    // Utilizza il servizio per eseguire il comando clear
+    this.terminalService.executeCommand('clear').subscribe();
   }
 
   private cancelCommand() {
     this.currentInput = '';
-    this.commandHistory.push('^C');
-    this.scrollToBottom();
+    this.terminalService.executeCommand('^C').subscribe();
   }
 
   private scrollToBottom() {
@@ -129,6 +164,7 @@ export class TerminalComponent implements AfterViewInit {
     return output
       .replace(/\x1B\[1;32m(.*?)\x1B\[0m/g, '<span class="ansi-green">$1</span>')
       .replace(/\x1B\[2;37m(.*?)\x1B\[0m/g, '<span class="ansi-gray">$1</span>')
-      .replace(/\x1B\[1;31m(.*?)\x1B\[0m/g, '<span class="ansi-red">$1</span>');
+      .replace(/\x1B\[1;31m(.*?)\x1B\[0m/g, '<span class="ansi-red">$1</span>')
+      .replace(/\x1B\[1;34m(.*?)\x1B\[0m/g, '<span class="ansi-blue">$1</span>');
   }
 }

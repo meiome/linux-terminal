@@ -2,7 +2,7 @@
   Questo è il componente principale che funge da container per il terminale.
   In modalità sviluppo mostra il terminale Angular, in produzione sarà un Web Component.
 -->
-<div class="app-container">
+<div class="app-container" [class.dark-theme]="isDarkTheme">
   <header class="app-header">
     <h1>🐧 Linux Terminal Simulator</h1>
     <p>Un terminale Linux stilizzato realizzato con Angular Elements</p>
@@ -15,7 +15,7 @@
         In modalità sviluppo usiamo il componente Angular,
         in produzione useremo <linux-terminal></linux-terminal> 
       -->
-      <app-terminal></app-terminal>
+      <app-terminal [isDarkTheme]="isDarkTheme"></app-terminal>
     </div>
 
     <!-- Istruzioni e esempi -->

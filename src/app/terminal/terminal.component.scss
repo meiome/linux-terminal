@@ -1,61 +1,354 @@
-// Aggiungi queste classi al file terminal.component.scss esistente
+// Variabili CSS per i temi
+.linux-terminal {
+  // Variabili Light Theme (default)
+  --terminal-bg: #ffffff;
+  --terminal-text: #333333;
+  --terminal-header-bg: #f0f0f0;
+  --terminal-header-text: #333333;
+  --terminal-border: #dddddd;
+  --terminal-prompt: #28a745;
+  --terminal-input-bg: #f8f9fa;
+  --terminal-input-text: #333333;
+  --terminal-input-border: #dddddd;
+  --terminal-welcome-text: #666666;
+  --terminal-scrollbar: #cccccc;
+  --terminal-scrollbar-hover: #aaaaaa;
 
-.ansi-green {
-  color: #69f0ae;
-  font-weight: bold;
-}
-
-.ansi-gray {
-  color: #b3b3b3;
-  font-style: italic;
-}
-
-.ansi-red {
-  color: #ff5252;
-  font-weight: bold;
-}
-
-.loading-spinner {
-  margin-left: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #69f0ae;
-  border-top: 2px solid transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.command-input:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-// Effetti di focus migliorati
-.command-input:focus {
-  outline: none;
-  background-color: rgba(105, 240, 174, 0.1);
-}
-
-// Supporto per mobile
-@media (max-width: 768px) {
-  .input-line {
-    flex-wrap: wrap;
+  // Variabili Dark Theme
+  &.dark-theme {
+    --terminal-bg: #1e1e1e;
+    --terminal-text: #f0f0f0;
+    --terminal-header-bg: #2d2d30;
+    --terminal-header-text: #cccccc;
+    --terminal-border: #3e3e42;
+    --terminal-prompt: #69f0ae;
+    --terminal-input-bg: #252526;
+    --terminal-input-text: #f0f0f0;
+    --terminal-input-border: #3e3e42;
+    --terminal-welcome-text: #cccccc;
+    --terminal-scrollbar: #555555;
+    --terminal-scrollbar-hover: #777777;
   }
-  
-  .loading-spinner {
-    margin-left: 0;
+}
+
+.linux-terminal {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  max-height: 80vh;
+  background-color: var(--terminal-bg);
+  color: var(--terminal-text);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.4;
+  transition: all 0.3s ease;
+
+  .terminal-header {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: var(--terminal-header-bg);
+    border-bottom: 1px solid var(--terminal-border);
+    user-select: none;
+
+    .terminal-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .terminal-button {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+
+      &.close {
+        background-color: #ff5f56;
+        &:hover { background-color: #e0443e; }
+      }
+
+      &.minimize {
+        background-color: #ffbd2e;
+        &:hover { background-color: #dea123; }
+      }
+
+      &.maximize {
+        background-color: #27c93f;
+        &:hover { background-color: #1aad29; }
+      }
+    }
+
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      color: var(--terminal-header-text);
+      font-size: 12px;
+      font-weight: 500;
+      margin: 0 60px;
+    }
+
+    .terminal-header-spacer {
+      width: 54px;
+    }
+  }
+
+  .terminal-content {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background-color: var(--terminal-bg);
+    scroll-behavior: smooth;
+
+    // Stili per la scrollbar
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--terminal-scrollbar);
+      border-radius: 4px;
+      
+      &:hover {
+        background-color: var(--terminal-scrollbar-hover);
+      }
+    }
+  }
+
+  .welcome-message {
+    color: var(--terminal-welcome-text);
+    margin-bottom: 16px;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .terminal-line {
+    margin-bottom: 4px;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+
+  .input-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin-top: 8px;
-    width: 100%;
-    justify-content: center;
+
+    .prompt {
+      color: var(--terminal-prompt);
+      font-weight: bold;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    form {
+      flex: 1;
+      display: flex;
+    }
+
+    .command-input {
+      flex: 1;
+      background-color: var(--terminal-input-bg);
+      color: var(--terminal-input-text);
+      border: 1px solid var(--terminal-input-border);
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-family: inherit;
+      font-size: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+
+      &:focus {
+        border-color: var(--terminal-prompt);
+        box-shadow: 0 0 0 2px rgba(105, 240, 174, 0.2);
+        background-color: var(--terminal-input-bg);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      &::placeholder {
+        color: var(--terminal-welcome-text);
+        opacity: 0.6;
+      }
+    }
+  }
+
+  .loading-spinner {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--terminal-prompt);
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  // Stili per i colori ANSI
+  .ansi-green {
+    color: #69f0ae;
+    font-weight: bold;
+  }
+
+  .ansi-gray {
+    color: #b3b3b3;
+    font-style: italic;
+  }
+
+  .ansi-red {
+    color: #ff5252;
+    font-weight: bold;
+  }
+
+  // Animazioni
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  // Effetti di focus migliorati per accessibilità
+  .command-input:focus-visible {
+    outline: 2px solid var(--terminal-prompt);
+    outline-offset: 2px;
+  }
+
+  // Supporto per mobile e dispositivi touch
+  @media (max-width: 768px) {
+    height: 350px;
+    font-size: 13px;
+
+    .terminal-header {
+      padding: 6px 10px;
+      
+      .terminal-button {
+        width: 10px;
+        height: 10px;
+      }
+
+      .terminal-title {
+        font-size: 11px;
+        margin: 0 40px;
+      }
+    }
+
+    .terminal-content {
+      padding: 12px;
+    }
+
+    .input-line {
+      flex-wrap: wrap;
+      gap: 6px;
+
+      .loading-spinner {
+        margin-left: 0;
+        margin-top: 8px;
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .command-input {
+      min-width: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    height: 300px;
+    font-size: 12px;
+
+    .terminal-header {
+      .terminal-title {
+        margin: 0 30px;
+        font-size: 10px;
+      }
+    }
+
+    .welcome-message {
+      font-size: 11px;
+    }
+  }
+
+  // Supporto per preferenze di riduzione del movimento
+  @media (prefers-reduced-motion: reduce) {
+    .terminal-content {
+      scroll-behavior: auto;
+    }
+
+    .spinner {
+      animation: none;
+      border: 2px solid var(--terminal-prompt);
+      border-top: 2px solid var(--terminal-prompt);
+      opacity: 0.6;
+    }
+
+    .command-input {
+      transition: none;
+    }
+  }
+}
+
+// Stili per il contesto dell'app host
+:host {
+  display: block;
+  width: 100%;
+}
+
+// Aggiungi questa classe nella sezione dei colori ANSI
+.ansi-blue {
+  color: #64b5f6;
+  font-weight: bold;
+}
+
+// Miglioramenti per l'accessibilità
+@media (prefers-contrast: high) {
+  .linux-terminal {
+    &.dark-theme {
+      --terminal-bg: #000000;
+      --terminal-text: #ffffff;
+      --terminal-border: #ffffff;
+    }
+
+    &:not(.dark-theme) {
+      --terminal-bg: #ffffff;
+      --terminal-text: #000000;
+      --terminal-border: #000000;
+    }
+
+    .ansi-green {
+      color: #00ff00;
+    }
+
+    .ansi-red {
+      color: #ff0000;
+    }
+  }
+}
+
+// Supporto per modalità ad alto contrasto di sistema
+@media (forced-colors: active) {
+  .linux-terminal {
+    border: 1px solid CanvasText;
+    
+    .terminal-header {
+      border-bottom: 1px solid CanvasText;
+    }
+
+    .command-input {
+      border: 1px solid CanvasText;
+      forced-color-adjust: none;
+    }
   }
 }

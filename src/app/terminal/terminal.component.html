@@ -6,8 +6,7 @@
       <span class="terminal-button maximize"></span>
     </div>
     <div class="terminal-title">
-      {{ terminalService.currentUser }}@{{ terminalService.currentHostname }}: {{ terminalService.currentDirectoryPath
-      }}
+      {{ terminalService.currentUser }}@{{ terminalService.currentHostname }}: {{ terminalService.currentDirectoryPath }}
     </div>
     <div class="terminal-header-spacer"></div>
   </div>
@@ -23,7 +22,7 @@
     </div>
 
     <div class="input-line" *ngIf="showPrompt">
-      <span class="prompt">{{ getPrompt() }}</span>
+      <span class="prompt" [innerHTML]="formatOutput(getPrompt())"></span>
       <form (submit)="executeCommand($event)">
         <input #terminalInput type="text" [(ngModel)]="currentInput" (keydown)="handleKeyDown($event)"
           [ngModelOptions]="{standalone: true}" class="command-input" autocomplete="off" autocorrect="off"
