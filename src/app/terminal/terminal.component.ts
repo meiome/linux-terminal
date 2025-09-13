@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, HostListener, ChangeDetectorRef, OnDestroy, Input } from '@angular/core';
 import { TerminalService } from '../services/terminal.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser'; // Aggiungi questa importazione
 
 @Component({
   selector: 'app-terminal',
@@ -21,10 +22,14 @@ export class TerminalComponent implements AfterViewInit, OnDestroy {
   constructor(
     public terminalService: TerminalService,
     private cdRef: ChangeDetectorRef,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private sanitizer: DomSanitizer // Aggiungi DomSanitizer
   ) { }
 
   ngAfterViewInit() {
+    // Esponi la funzione globalmente per i bottoni "utilizza"
+    (window as any).terminalUseEntity = (entity: string) => this.useEntity(entity);
+
     this.focusInput();
     this.scrollToBottom();
 
@@ -33,13 +38,23 @@ export class TerminalComponent implements AfterViewInit, OnDestroy {
       this.commandHistory = history;
       this.cdRef.detectChanges();
       this.scrollToBottom();
+
+      // Forza il re-rendering per assicurarsi che i bottoni vengano interpretati
+      setTimeout(() => {
+        this.cdRef.detectChanges();
+      }, 0);
     });
 
     // Applica il tema iniziale
     this.applyThemeClass();
-    
+
     // Ascolta il cambio tema
     this.setupThemeListener();
+
+    // Assicurati che l'input sia focalizzato dopo il rendering iniziale
+    setTimeout(() => {
+      this.focusInput();
+    }, 100);
   }
 
   ngOnChanges() {
@@ -54,6 +69,9 @@ export class TerminalComponent implements AfterViewInit, OnDestroy {
     if (this.themeSubscription) {
       window.removeEventListener('theme-change', this.themeSubscription);
     }
+
+    // Rimuovi la funzione globale per pulizia
+    (window as any).terminalUseEntity = null;
   }
 
   private setupThemeListener(): void {
@@ -164,13 +182,44 @@ export class TerminalComponent implements AfterViewInit, OnDestroy {
     return this.terminalService.getPrompt();
   }
 
-  // Metodo per formattare l'output con colori ANSI
-  formatOutput(output: string): string {
-    // Sostituisce i codici ANSI con span per i colori
-    return output
+  formatOutput(output: string): SafeHtml { // Cambia il tipo di ritorno a SafeHtml
+    //console.log('Input RAW:', output);
+
+    // Prima gestisci i codici ANSI
+    let formatted = output
+      // Sostituisci i codici ANSI per i colori
       .replace(/\x1B\[1;32m(.*?)\x1B\[0m/g, '<span class="ansi-green">$1</span>')
       .replace(/\x1B\[2;37m(.*?)\x1B\[0m/g, '<span class="ansi-gray">$1</span>')
       .replace(/\x1B\[1;31m(.*?)\x1B\[0m/g, '<span class="ansi-red">$1</span>')
-      .replace(/\x1B\[1;34m(.*?)\x1B\[0m/g, '<span class="ansi-blue">$1</span>');
+      .replace(/\x1B\[1;34m(.*?)\x1B\[0m/g, '<span class="ansi-blue">$1</span>')
+      // Gestione alternativa per codici ANSI malformati
+      .replace(/\[1;32m(.*?)\[0m/g, '<span class="ansi-green">$1</span>')
+      .replace(/\[1;34m(.*?)\[0m/g, '<span class="ansi-blue">$1</span>');
+
+    // Poi gestisci i bottoni utilizza
+    formatted = formatted.replace(
+      /\[utilizza:(.*?)\]/g,
+      (match, entityName) => {
+        return `<button class="utilizza-btn" onclick="window.terminalUseEntity('${entityName}')">utilizza</button>`;
+      }
+    );
+
+    //console.log('Output FORMATTED:', formatted);
+    
+    // Contrassegna l'HTML come sicuro
+    return this.sanitizer.bypassSecurityTrustHtml(formatted);
   }
+
+  useEntity(entity: string): void {
+    console.log('Utilizzo entità:', entity);
+    // Inserisci il comando nel terminale
+    this.currentInput = `use ${entity}`;
+    this.executeCommand();
+
+    // Focus sull'input dopo un breve delay
+    setTimeout(() => {
+      this.focusInput();
+    }, 100);
+  }
+
 }

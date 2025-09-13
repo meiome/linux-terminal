@@ -67,17 +67,26 @@
 
       &.close {
         background-color: #ff5f56;
-        &:hover { background-color: #e0443e; }
+
+        &:hover {
+          background-color: #e0443e;
+        }
       }
 
       &.minimize {
         background-color: #ffbd2e;
-        &:hover { background-color: #dea123; }
+
+        &:hover {
+          background-color: #dea123;
+        }
       }
 
       &.maximize {
         background-color: #27c93f;
-        &:hover { background-color: #1aad29; }
+
+        &:hover {
+          background-color: #1aad29;
+        }
       }
     }
 
@@ -114,7 +123,7 @@
     &::-webkit-scrollbar-thumb {
       background-color: var(--terminal-scrollbar);
       border-radius: 4px;
-      
+
       &:hover {
         background-color: var(--terminal-scrollbar-hover);
       }
@@ -213,10 +222,51 @@
     font-weight: bold;
   }
 
+  .ansi-blue {
+    color: #64b5f6;
+    font-weight: bold;
+  }
+
+  // terminal.component.scss - aggiungi questi stili
+  .utilizza-btn {
+    background-color: var(--terminal-prompt);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 2px 8px;
+    margin-left: 10px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    vertical-align: middle;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  // Per il tema dark
+  .dark-theme {
+    .utilizza-btn {
+      background-color: var(--terminal-prompt);
+      color: #1e1e1e;
+      font-weight: bold;
+    }
+  }
+
   // Animazioni
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   // Effetti di focus migliorati per accessibilità
@@ -232,7 +282,7 @@
 
     .terminal-header {
       padding: 6px 10px;
-      
+
       .terminal-button {
         width: 10px;
         height: 10px;
@@ -341,7 +391,7 @@
 @media (forced-colors: active) {
   .linux-terminal {
     border: 1px solid CanvasText;
-    
+
     .terminal-header {
       border-bottom: 1px solid CanvasText;
     }

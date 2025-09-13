@@ -29,6 +29,7 @@ export class TerminalService {
   private user = 'user';
   private hostname = 'linux-box';
   private apiBaseUrl = '/api';
+  private entitiesUrl = '/terminal/listamaschere'; // Nuovo endpoint per le entità
   private commandHistory: string[] = [];
   private historyIndex = -1;
 
@@ -155,6 +156,11 @@ export class TerminalService {
         name: 'history',
         description: 'Mostra la cronologia dei comandi',
         execute: () => this.historyCommand()
+      },
+      {
+        name: 'lista',
+        description: 'Mostra tutte le entità disponibili dal backend',
+        execute: () => this.listaCommand()
       }
     ];
   }
@@ -513,6 +519,55 @@ Memoria: ${info.memory}`;
       map(response => `✅ API Connection: ${response.message}\nTimestamp: ${response.timestamp}`),
       catchError(error => of(`❌ API Error: ${error.message}\nAssicurati che il backend sia in esecuzione`))
     );
+  }
+
+  private listaCommand(): Observable<string> {
+    return this.http.get<{ code: number, success: boolean, data: string[] }>(this.entitiesUrl).pipe(
+      map(response => {
+        if (response.success && response.data) {
+          return this.formatEntitiesList(response.data);
+        } else {
+          return '❌ Errore nel recupero delle entità dal backend\n' + this.getFallbackEntitiesList();
+        }
+      }),
+      catchError(error => {
+        console.error('Errore lista command:', error);
+        return of(this.getFallbackEntitiesList());
+      })
+    );
+  }
+
+  private formatEntitiesList(entities: string[]): string {
+    if (entities.length === 0) {
+      return '📭 Nessuna entità disponibile';
+    }
+
+    const sortedEntities = entities.sort();
+    let output = '📋 Entità disponibili:\n\n';
+
+    // Formattazione semplificata senza codici ANSI complessi
+    sortedEntities.forEach(entity => {
+      output += `   ${entity} [utilizza:${entity}]\n`;
+    });
+
+    output += `\n📊 Totale: ${sortedEntities.length} entità`;
+    return output;
+  }
+
+  private getFallbackEntitiesList(): string {
+    const fallbackEntities = [
+      'articoli', 'cataloghi', 'cataloghidettagli', 'presenze',
+      'utenti', 'actor', 'politicaprezzi', 'sales',
+      'keycassa', 'categorie', 'articolisoloimmagini', 'movimenticassa', 'baseoraria'
+    ];
+
+    const errorMessage =
+      '❌ ERRORE: Impossibile connettersi al backend\n' +
+      '📡 Motivo: Timeout o server non raggiungibile\n' +
+      '💡 Soluzione: Verifica che il backend sia in esecuzione\n\n' +
+      '📋 Mostro entità locali di fallback:\n\n';
+
+    return errorMessage + this.formatEntitiesList(fallbackEntities);
   }
 
   // === IMPLEMENTAZIONE COMANDI PIPE ===
