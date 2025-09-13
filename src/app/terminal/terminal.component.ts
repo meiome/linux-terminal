@@ -121,6 +121,12 @@ export class TerminalComponent implements AfterViewInit, OnDestroy {
     } else if (event.key === 'c' && event.ctrlKey) {
       event.preventDefault();
       this.cancelCommand();
+    } else if (event.key === 'F2') {
+      event.preventDefault();
+      //this.terminalService.addToHistory("funzione non ancora implementata");
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      this.clearTerminal();
     }
   }
 

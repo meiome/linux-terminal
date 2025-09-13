@@ -1,3 +1,7 @@
+TODO:
+
+iniziare parte di integrazione progetto Angular per altri progetti
+
 # LinuxTerminal
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.12.
