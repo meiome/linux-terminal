@@ -1,8 +1,18 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/app",
+    "outDir": "./dist/out-tsc/app",
+    "declaration": true,
+    "declarationMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "module": "es2022",
+    "moduleResolution": "node",
+    "target": "es2022",
+    "lib": [
+      "es2022",
+      "dom"
+    ],
     "types": []
   },
   "files": [
@@ -10,5 +20,18 @@
   ],
   "include": [
     "src/**/*.d.ts"
-  ]
+  ],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "src/test.ts"
+  ],
+  "angularCompilerOptions": {
+    "enableIvy": true,
+    "compilationMode": "partial",
+    "strictTemplates": true,
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+    // RIMUOVI flatModuleId e flatModuleOutFile
+  }
 }

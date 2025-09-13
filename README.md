@@ -1,6 +1,12 @@
-TODO:
 
-iniziare parte di integrazione progetto Angular per altri progetti
+come creare BUILD
+
+1- npm run build
+2- npm pack
+
+
+
+######
 
 # LinuxTerminal
 

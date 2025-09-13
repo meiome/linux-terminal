@@ -1,14 +1,46 @@
 {
   "name": "linux-terminal",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "A Linux-like terminal Web Component built with Angular",
+  "keywords": ["angular", "terminal", "web-component", "cli", "linux"],
+  "license": "MIT",
+  "author": "Your Name",
+  "homepage": "https://github.com/yourusername/linux-terminal",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/linux-terminal.git"
+  },
+  
+  "main": "dist/linux-terminal/main.js",
+  "module": "dist/linux-terminal/main.js",
+  "types": "dist/linux-terminal/main.d.ts",
+  "files": [
+    "dist/linux-terminal",
+    "README.md",
+    "LICENSE"
+  ],
+  
+  "private": false,
+  
+  "peerDependencies": {
+    "@angular/common": "^16.0.0 || ^17.0.0 || ^18.0.0",
+    "@angular/core": "^16.0.0 || ^17.0.0 || ^18.0.0",
+    "@angular/elements": "^16.0.0 || ^17.0.0 || ^18.0.0",
+    "@angular/forms": "^16.0.0 || ^17.0.0 || ^18.0.0",
+    "rxjs": "^7.0.0"
+  },
+  
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production",
+    "build:dev": "ng build --configuration development",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "pack": "ng build --configuration production && npm pack",
+    "prepack": "npm run build"
   },
-  "private": true,
+  
   "dependencies": {
     "@angular/animations": "^16.2.0",
     "@angular/common": "^16.2.0",
@@ -24,6 +56,7 @@
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
   },
+  
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.12",
     "@angular/cli": "^16.2.12",

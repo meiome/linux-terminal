@@ -1,0 +1,13 @@
+.git/
+.gitignore
+.npmignore
+src/
+e2e/
+node_modules/
+angular.json
+tsconfig.*
+karma.conf.js
+*.tgz
+.vscode/
+.idea/
+.DS_Store
